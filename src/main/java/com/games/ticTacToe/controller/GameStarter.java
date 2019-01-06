@@ -3,6 +3,7 @@ package com.games.ticTacToe.controller;
 import com.games.ticTacToe.model.Board;
 import com.games.ticTacToe.model.Figure;
 import com.games.ticTacToe.model.Player;
+import com.games.ticTacToe.model.Player.Type;
 import com.games.ticTacToe.model.exceptions.InvalidBoardSizeException;
 import com.games.ticTacToe.view.ConsoleView;
 
@@ -25,8 +26,14 @@ public class GameStarter {
             e.printStackTrace();
         }
         final Player[] players = new Player[2];
-        players[0] = new Player(playerOneName, Figure.X);
-        players[1] = new Player(playerTwoName, Figure.O);
+        players[0] = new Player(playerOneName, Figure.X, Type.Player);
+
+        if (playerTwoName.equals("AI")) {
+            players[1] = new Player(playerTwoName, Figure.O, Type.AI);
+        } else {
+            players[1] = new Player(playerTwoName, Figure.O, Type.Player);
+        }
+
         final GameController gameController = new GameController(gameName, players, board);
         final ConsoleView consoleView = new ConsoleView(gameController);
         final Game game = new Game(consoleView);

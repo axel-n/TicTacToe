@@ -10,7 +10,7 @@ public class Game {
     final private IView iview;
     final private GameController gameController;
 
-    public Game(IView iview) {
+    Game(IView iview) {
         this.iview = iview;
         this.gameController = iview.getGameController();
     }
@@ -38,7 +38,7 @@ public class Game {
         }
     }
 
-    protected GameController getGameController() {
+    GameController getGameController() {
         return gameController;
     }
 }
