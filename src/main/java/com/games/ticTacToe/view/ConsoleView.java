@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class ConsoleView implements IView {
 
-    private static final String CHARACTER_HYPHEN = "-";
+    private static final String CHARACTER_HYPHEN = "-----";
 
     private static final String EMPTY_FIGURE = " ";
 
@@ -47,6 +47,7 @@ public class ConsoleView implements IView {
 
     public void showBoard() {
         int lineSize = game.getBoard().getFiguresArray().length;
+        System.out.printf("%n");
         for (int i = 0 ; i < lineSize; i++) {
             showBoardLine(i);
             printLine(CHARACTER_HYPHEN, lineSize);
@@ -100,6 +101,8 @@ public class ConsoleView implements IView {
 
     private void showBoardLine(final int row)  {
         for (int i = 0; i < game.getBoard().getRowLength(row); i++) {
+
+            System.out.print(" | ");
             try {
                 if (game.getBoard().getFigure(row, i) == null) {
                     System.out.print(EMPTY_FIGURE);
@@ -111,7 +114,7 @@ public class ConsoleView implements IView {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println();
+        System.out.printf(" |%n");
     }
 
     protected int getCoordinate() {
