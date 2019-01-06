@@ -21,8 +21,7 @@ public class ConsoleMenuView {
     private static final int MIN_SIZE = 3;
 
     public static void showMenuTypePlayers() {
-        System.out.println("Question 1 of 2.");
-        System.out.println("Who will be play?");
+        System.out.printf("%nQuestion 1 of 3. Who will be play?%n");
         System.out.println(PLAYER_WITH_AI_CODE + " - Player with AI");
         System.out.println(PLAYER_WITH_PLAYER_CODE + " - Player with Player");
 
@@ -48,12 +47,12 @@ public class ConsoleMenuView {
     }
 
     private static void showMenuForPlayers2AI() {
-        System.out.println("Question 2 of 2.");
+        System.out.printf("%nQuestion 2 of 3.%n");
         customInput(1).theGame();
     }
 
     private static void showMenuForPlayers2Players() {
-        System.out.println("Question 2 of 2.");
+        System.out.println("Question 2 of 3.");
         System.out.println(START_CODE + " - Play with preset players name");
         System.out.println(SETTINGS_CODE + " - Set up and play");
 
@@ -85,11 +84,11 @@ public class ConsoleMenuView {
         final String gameName = "XO";
         String playerOneName, playerTwoName; ;
 
-        System.out.println("Enter player 1 name:");
+        System.out.printf("Your name? ");
         playerOneName = input.nextLine();
 
         if (countPlayers > 1) {
-            System.out.println("Enter player two name:");
+            System.out.printf("Enter player two name: ");
             playerTwoName = input.nextLine();
         } else {
             System.out.println("Player 2 name: AI");
@@ -103,7 +102,7 @@ public class ConsoleMenuView {
     public static int enterSize() {
         Scanner input = new Scanner(System.in);
         try {
-            System.out.println("Enter board size:");
+            System.out.printf("%nQuestion 3 of 3. Size of board? ");
             BOARD_SIZE = input.nextInt();
             if (BOARD_SIZE < MIN_SIZE) {
                 throw new InvalidBoardSizeException();
