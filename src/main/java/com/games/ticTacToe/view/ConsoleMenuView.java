@@ -9,22 +9,53 @@ import java.util.Scanner;
 
 public class ConsoleMenuView {
 
+    private static final int PLAYER_WITH_AI_CODE = 1;
+    private static final int PLAYER_WITH_PLAYER_CODE = 2;
+
     private static final int START_CODE = 1;
 
     private static final int SETTINGS_CODE = 2;
-
-    private static final int EXIT_CODE = 3;
 
     private static int BOARD_SIZE;
 
     private static final int MIN_SIZE = 3;
 
-    public static void showMenuWithResult() {
+    public static void showMenuTypePlayers() {
+        System.out.println("Question 1 of 2.");
+        System.out.println("Who will be play?");
+        System.out.println(PLAYER_WITH_AI_CODE + " - Player with AI");
+        System.out.println(PLAYER_WITH_PLAYER_CODE + " - Player with Player");
 
-        System.out.println(START_CODE + " - Play");
+        try {
+            final Scanner scanner = new Scanner(System.in);
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case PLAYER_WITH_AI_CODE:
+                    showMenuForPlayers2AI();
+                    break;
+                case PLAYER_WITH_PLAYER_CODE:
+                    showMenuForPlayers2Players();
+                    break;
+                default:
+                    System.out.println("Choice is incorrect, please try again");
+                    showMenuTypePlayers();
+                    break;
+            }
+        } catch (final InputMismatchException e) {
+            System.out.println("Please enter correct choice");
+            showMenuTypePlayers();
+        }
+    }
+
+    private static void showMenuForPlayers2AI() {
+        System.out.println("Question 2 of 2.");
+        customInput(1).theGame();
+    }
+
+    private static void showMenuForPlayers2Players() {
+        System.out.println("Question 2 of 2.");
+        System.out.println(START_CODE + " - Play with preset players name");
         System.out.println(SETTINGS_CODE + " - Set up and play");
-        System.out.println(EXIT_CODE + " - Exit");
-        System.out.print("> ");
 
         try {
             final Scanner scanner = new Scanner(System.in);
@@ -35,46 +66,49 @@ public class ConsoleMenuView {
                     GameStarter.defaultStart().theGame();
                     break;
                 case SETTINGS_CODE:
-                    customInput().theGame();
-                    break;
-                case EXIT_CODE:
-                    System.out.println("Exit");
+                    customInput(2).theGame();
                     break;
                 default:
                     System.out.println("Choice is incorrect, please try again");
-                    showMenuWithResult();
+                    showMenuForPlayers2Players();
                     break;
             }
-        }
-        catch (final InputMismatchException e)
-        {
+        } catch (final InputMismatchException e) {
             System.out.println("Please enter correct choice");
-            showMenuWithResult();
+            showMenuForPlayers2Players();
         }
 
     }
 
-    protected static Game customInput() {
+    private static Game customInput(int countPlayers) {
         Scanner input = new Scanner(System.in);
         final String gameName = "XO";
-        System.out.println("Enter player one name:");
-        String playerOneName = input.nextLine();
-        System.out.println("Enter player two name:");
-        String playerTwoName = input.nextLine();
+        String playerOneName, playerTwoName; ;
+
+        System.out.println("Enter player 1 name:");
+        playerOneName = input.nextLine();
+
+        if (countPlayers > 1) {
+            System.out.println("Enter player two name:");
+            playerTwoName = input.nextLine();
+        } else {
+            System.out.println("Player 2 name: AI");
+            playerTwoName = "AI";
+        }
+
         final int boardSize = enterSize();
-        return GameStarter.customStart(boardSize,playerOneName,playerTwoName, gameName);
+        return GameStarter.customStart(boardSize, playerOneName, playerTwoName, gameName);
     }
 
-    protected static int enterSize(){
+    public static int enterSize() {
         Scanner input = new Scanner(System.in);
         try {
             System.out.println("Enter board size:");
             BOARD_SIZE = input.nextInt();
-            if (BOARD_SIZE < MIN_SIZE){
+            if (BOARD_SIZE < MIN_SIZE) {
                 throw new InvalidBoardSizeException();
             }
-        }
-        catch (final InputMismatchException | InvalidBoardSizeException e){
+        } catch (final InputMismatchException | InvalidBoardSizeException e) {
             System.out.println("Input is wrong, please enter correct integer greater than 3");
             enterSize();
         }

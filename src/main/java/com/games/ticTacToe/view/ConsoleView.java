@@ -17,7 +17,7 @@ public class ConsoleView implements IView {
 
     private static final String INPUT_ERROR = "Incorrect input, please try again";
 
-    protected final GameController game;
+    private final GameController game;
 
     public ConsoleView(final GameController game) {
         assert game != null;
@@ -31,7 +31,6 @@ public class ConsoleView implements IView {
     public Point startTurn(Player currentPlayer) {
 
         System.out.printf("Now step: %s, player name: %s%n", currentPlayer.getFigure(), currentPlayer.getName());
-        System.out.println("Next turn!");
 
         return new Point(getCoordinate(),getCoordinate());
     }
@@ -73,7 +72,7 @@ public class ConsoleView implements IView {
             String choice = scanner.nextLine();
             switch (choice) {
                 case "y":
-                    ConsoleMenuView.showMenuWithResult();
+                    ConsoleMenuView.showMenuTypePlayers();
                     break;
                 case "n":
                     System.out.println("Exit...");

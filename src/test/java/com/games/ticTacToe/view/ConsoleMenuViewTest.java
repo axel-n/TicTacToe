@@ -28,22 +28,6 @@ public class ConsoleMenuViewTest {
     }
 
     @Test
-    public void testCustomInputForIn() throws Exception {
-        ByteArrayInputStream in = new ByteArrayInputStream("S0me pl4y3r n4m3 1\n S0me pl4y3r n4m3 2\n".getBytes());
-        System.setIn(in);
-        try {
-            ConsoleMenuView.customInput();
-        }
-        catch (final NoSuchElementException e){
-            e.printStackTrace();
-        }
-        assertEquals("Enter player one name:\n" +
-                "Enter player two name:\n" +
-                "Enter board size:\n", outContent.toString());
-        outContent.reset();
-    }
-
-    @Test
     public void testEnterSizeIncorrectInputString() throws Exception {
         ByteArrayInputStream in = new ByteArrayInputStream("Xonstantin\n Oleg\n".getBytes());
         System.setIn(in);
