@@ -7,6 +7,11 @@ import java.util.Scanner;
 
 public class ConsoleView {
 
+    public void startGame(){
+        System.out.println("Starting a new game.");
+
+    }
+
     public ConsoleView() {
         board = GameController.getBoard();
     }
@@ -33,18 +38,29 @@ public class ConsoleView {
         }
     }
 
-    public void getPlayerMove() {
+    public int getPlayerMove() {
         System.out.print("Index of move: ");
 
-        int move = sc.nextInt();
+        return sc.nextInt();
+    }
 
-        if (move < 0 || move >= Board.getBoardWidth() * Board.getBoardWidth()) {
-            System.out.println("\nInvalid move.");
-            System.out.println("\nThe index of the move must be between 0 and "
-                    + (Board.getBoardWidth() * Board.getBoardWidth() - 1) + ", inclusive.");
-        } else if (!board.move(move)) {
-            System.out.println("\nInvalid move.");
-            System.out.println("\nThe selected index must be blank.");
+    public void printWinner(Board.State winner) {
+
+        System.out.println("\n" + board + "\n");
+
+        if (winner == Board.State.Blank) {
+            System.out.println("The TicTacToe is a Draw.");
+        } else {
+            System.out.println("Player " + winner.toString() + " wins!");
         }
+    }
+
+    public void printGameStatus () {
+        System.out.println("\n" + board + "\n");
+        System.out.println(board.getTurn().name() + "'s turn.");
+    }
+
+    public void printError(String message) {
+        System.out.println(message);
     }
 }

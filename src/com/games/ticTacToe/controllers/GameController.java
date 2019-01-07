@@ -6,7 +6,6 @@ import com.games.ticTacToe.view.ConsoleView;
 
 public class GameController {
 
-
     private static Board board;
     private static ConsoleView view;
 
@@ -19,16 +18,18 @@ public class GameController {
         return board;
     }
 
-    public void play () {
+    public void play() {
 
-        System.out.println("Starting a new game.");
+        view.startGame();
 
         while (true) {
-            printGameStatus();
+            view.printGameStatus();
             playMove();
 
             if (board.isGameOver()) {
-                printWinner();
+
+                Board.State winner = board.getWinner();
+                view.printWinner(winner);
 
                 if (!tryAgain()) {
                     break;
@@ -37,7 +38,7 @@ public class GameController {
         }
     }
 
-    private void playMove () {
+    private void playMove() {
         if (board.getTurn() == Board.State.X) {
             getPlayerMove();
         } else {
@@ -45,28 +46,28 @@ public class GameController {
         }
     }
 
-    private void printGameStatus () {
-        System.out.println("\n" + board + "\n");
-        System.out.println(board.getTurn().name() + "'s turn.");
-    }
+    private void getPlayerMove() {
+        int moveIndex = view.getPlayerMove();
 
-    private void getPlayerMove () {
-        view.getPlayerMove();
-    }
+        String error = "";
+        if (moveIndex < 0 || moveIndex >= Board.getBoardWidth() * Board.getBoardWidth()) {
 
-    private void printWinner () {
-        Board.State winner = board.getWinner();
+            error = "\nInvalid move." +
+                    "\nThe index of the move must be between 0 and " +
+                    (Board.getBoardWidth() * Board.getBoardWidth() - 1) +
+                    ", inclusive.";
 
-        System.out.println("\n" + board + "\n");
+        } else if (!board.move(moveIndex)) {
 
-        if (winner == Board.State.Blank) {
-            System.out.println("The TicTacToe is a Draw.");
-        } else {
-            System.out.println("Player " + winner.toString() + " wins!");
+            error = "\nInvalid move." +
+                    "\nThe selected index must be blank.";
         }
+
+        view.printError(error);
     }
 
-    private boolean tryAgain () {
+
+    private boolean tryAgain() {
         if (promptTryAgain()) {
             board.reset();
             view.againText();
@@ -76,7 +77,7 @@ public class GameController {
         return false;
     }
 
-    private boolean promptTryAgain () {
+    private boolean promptTryAgain() {
         return view.promtAgain();
     }
 }
