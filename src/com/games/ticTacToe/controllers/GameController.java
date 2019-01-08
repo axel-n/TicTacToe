@@ -1,6 +1,7 @@
 package com.games.ticTacToe.controllers;
 
-import com.games.ticTacToe.AI.Algorithms;
+import com.games.ticTacToe.AI.AlphaBetaAdvanced;
+import com.games.ticTacToe.AI.Simple;
 import com.games.ticTacToe.model.Board;
 import com.games.ticTacToe.view.ConsoleView;
 
@@ -9,9 +10,16 @@ public class GameController {
     private static Board board;
     private static ConsoleView view;
 
+    private final int EASY_DIFFICULT_CODE = 1;
+    private final int HARD_DIFFICULT_CODE = 2;
+    private final int boardWidth;
+
+    private final Board.State FIGURE_PLAYER = Board.State.X;
+
     public GameController() {
         board = new Board();
         view = new ConsoleView();
+        boardWidth = Board.getBoardWidth();
     }
 
     public static Board getBoard() {
@@ -20,64 +28,61 @@ public class GameController {
 
     public void play() {
 
-        view.startGame();
+        int difficult = view.startGame();
 
-        while (true) {
+        while (!board.isGameOver()) {
             view.printGameStatus();
-            playMove();
-
-            if (board.isGameOver()) {
-
-                Board.State winner = board.getWinner();
-                view.printWinner(winner);
-
-                if (!tryAgain()) {
-                    break;
-                }
-            }
+            playMove(difficult);
         }
+
+        Board.State winner = board.getWinner();
+        view.printWinner(winner);
     }
 
-    private void playMove() {
-        if (board.getTurn() == Board.State.X) {
-            getPlayerMove();
+    private void playMove(int codeDifficult) {
+        if (board.getTurn() == FIGURE_PLAYER) {
+            getCoordinates();
         } else {
-            Algorithms.alphaBetaAdvanced(board);
+            switch (codeDifficult){
+                case EASY_DIFFICULT_CODE:
+                    Simple.run(board);
+                    break;
+                case HARD_DIFFICULT_CODE:
+                    AlphaBetaAdvanced.run(board);
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
-    private void getPlayerMove() {
-        int moveIndex = view.getPlayerMove();
+    private void getCoordinates() {
+        int[] coordinates = view.getCoordinates();
 
         String error = "";
-        if (moveIndex < 0 || moveIndex >= Board.getBoardWidth() * Board.getBoardWidth()) {
+        if (!checkCoordinates(coordinates, boardWidth)) {
 
             error = "\nInvalid move." +
                     "\nThe index of the move must be between 0 and " +
-                    (Board.getBoardWidth() * Board.getBoardWidth() - 1) +
+                    (Board.getBoardWidth()-1) +
                     ", inclusive.";
 
-        } else if (!board.move(moveIndex)) {
+        } else if (!board.move(coordinates[0], coordinates[1])) {
 
             error = "\nInvalid move." +
-                    "\nThe selected index must be blank.";
+                    "\nThe selected coordinates must be blank.";
         }
 
         view.printError(error);
     }
 
+    private boolean checkCoordinates(int[] coordinates, int boardWidth) {
 
-    private boolean tryAgain() {
-        if (promptTryAgain()) {
-            board.reset();
-            view.againText();
-            return true;
+        if (coordinates[0] >= 0 && coordinates[0] <= boardWidth-1) {
+            return coordinates[1] >= 0 && coordinates[1] <= boardWidth-1;
         }
 
         return false;
-    }
-
-    private boolean promptTryAgain() {
-        return view.promtAgain();
     }
 }

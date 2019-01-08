@@ -7,41 +7,52 @@ import java.util.Scanner;
 
 public class ConsoleView {
 
-    public void startGame(){
-        System.out.println("Starting a new game.");
+    private static Board board;
 
-    }
+    private final int EASY_DIFFICULT_CODE = 1;
+    private final int HARD_DIFFICULT_CODE = 2;
+
+    private Scanner sc = new Scanner(System.in);
 
     public ConsoleView() {
         board = GameController.getBoard();
     }
-
-    private static Board board;
-
-    private Scanner sc = new Scanner(System.in);
 
     public final void againText() {
         System.out.println("Started new game.");
         System.out.println("X's turn.");
     }
 
-    public boolean promtAgain(){
-        while (true) {
-            System.out.print("Would you like to start a new game? (Y/N): ");
-            String response = sc.next();
-            if (response.equalsIgnoreCase("y")) {
-                return true;
-            } else if (response.equalsIgnoreCase("n")) {
-                return false;
-            }
-            System.out.println("Invalid input.");
+    public int startGame() {
+        System.out.println("Starting a new game.");
+
+        System.out.println("Choice diffucult:" +
+                "\n1 - Easy" +
+                "\n2 - Hard");
+
+        switch (sc.nextInt()) {
+            case EASY_DIFFICULT_CODE:
+                return EASY_DIFFICULT_CODE;
+            case HARD_DIFFICULT_CODE:
+                return HARD_DIFFICULT_CODE;
+            default:
+                System.out.println("Incorrect code difficult");
+                startGame();
+                break;
         }
+
+        return 0;
+
     }
 
-    public int getPlayerMove() {
-        System.out.print("Index of move: ");
+    public int[] getCoordinates() {
+        System.out.print("Enter coordinates for figure (X, Y): ");
 
-        return sc.nextInt();
+        int[] result = {0, 0};
+        result[0] = sc.nextInt();
+        result[1] = sc.nextInt();
+
+        return result;
     }
 
     public void printWinner(Board.State winner) {
@@ -55,7 +66,7 @@ public class ConsoleView {
         }
     }
 
-    public void printGameStatus () {
+    public void printGameStatus() {
         System.out.println("\n" + board + "\n");
         System.out.println(board.getTurn().name() + "'s turn.");
     }

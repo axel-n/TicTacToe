@@ -6,16 +6,13 @@ public class AlphaBetaAdvanced {
 
     private static double maxPly;
 
-    private AlphaBetaAdvanced() {}
+    //private AlphaBetaAdvanced() {}
 
-    static public void run (Board.State player, Board board, double maxPly) {
+     public static void run(Board board) {
 
-        if (maxPly < 1) {
-            throw new IllegalArgumentException("Maximum depth must be greater than 0.");
-        }
+        maxPly = Double.POSITIVE_INFINITY;
 
-        AlphaBetaAdvanced.maxPly = maxPly;
-        alphaBetaPruning(player, board, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
+        alphaBetaPruning(board.getTurn(), board, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
     }
 
     private static int alphaBetaPruning (Board.State player, Board board, double alpha, double beta, int currentPly) {
@@ -83,7 +80,7 @@ public class AlphaBetaAdvanced {
     }
 
 
-    private static int score (Board.State player, Board board, int currentPly) {
+    private static int score(Board.State player, Board board, int currentPly) {
 
         if (player == Board.State.Blank) {
             throw new IllegalArgumentException("Player must be X or O.");
