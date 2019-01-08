@@ -4,18 +4,18 @@ import com.games.ticTacToe.model.Board;
 
 public class AlphaBetaAdvanced {
 
+    private static final int BOARD_WIDTH = Board.getBoardWidth();
+
     private static double maxPly;
 
-    //private AlphaBetaAdvanced() {}
-
-     public static void run(Board board) {
+    public static void run(Board board) {
 
         maxPly = Double.POSITIVE_INFINITY;
 
         alphaBetaPruning(board.getTurn(), board, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0);
     }
 
-    private static int alphaBetaPruning (Board.State player, Board board, double alpha, double beta, int currentPly) {
+    private static int alphaBetaPruning(Board.State player, Board board, double alpha, double beta, int currentPly) {
         if (currentPly++ == maxPly || board.isGameOver()) {
             return score(player, board, currentPly);
         }
@@ -27,13 +27,14 @@ public class AlphaBetaAdvanced {
         }
     }
 
-    private static int getMax (Board.State player, Board board, double alpha, double beta, int currentPly) {
+    private static int getMax(Board.State player, Board board, double alpha, double beta, int currentPly) {
         int indexOfBestMove = -1;
 
         for (Integer theMove : board.getAvailableMoves()) {
 
             Board modifiedBoard = board.getDeepCopy();
-            modifiedBoard.move(theMove);
+
+            modifiedBoard.move(theMove % BOARD_WIDTH, theMove / BOARD_WIDTH);
             int score = alphaBetaPruning(player, modifiedBoard, alpha, beta, currentPly);
 
             if (score > alpha) {
@@ -47,19 +48,19 @@ public class AlphaBetaAdvanced {
         }
 
         if (indexOfBestMove != -1) {
-            board.move(indexOfBestMove);
+            board.move(indexOfBestMove % BOARD_WIDTH, indexOfBestMove / BOARD_WIDTH);
         }
-        return (int)alpha;
+        return (int) alpha;
     }
 
 
-    private static int getMin (Board.State player, Board board, double alpha, double beta, int currentPly) {
+    private static int getMin(Board.State player, Board board, double alpha, double beta, int currentPly) {
         int indexOfBestMove = -1;
 
         for (Integer theMove : board.getAvailableMoves()) {
 
             Board modifiedBoard = board.getDeepCopy();
-            modifiedBoard.move(theMove);
+            modifiedBoard.move(theMove % BOARD_WIDTH, theMove / BOARD_WIDTH);
 
             int score = alphaBetaPruning(player, modifiedBoard, alpha, beta, currentPly);
 
@@ -74,9 +75,9 @@ public class AlphaBetaAdvanced {
         }
 
         if (indexOfBestMove != -1) {
-            board.move(indexOfBestMove);
+            board.move(indexOfBestMove % BOARD_WIDTH, indexOfBestMove / BOARD_WIDTH);
         }
-        return (int)beta;
+        return (int) beta;
     }
 
 

@@ -54,11 +54,6 @@ public class Board {
         return board;
     }
 
-    @Deprecated
-    public boolean move(int index) {
-        return move(index % BOARD_WIDTH, index / BOARD_WIDTH);
-    }
-
     public boolean move(int x, int y) {
 
         if (board[x][y] == State.Blank) {
