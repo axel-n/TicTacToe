@@ -12,14 +12,13 @@ public class GameController {
 
     private final int EASY_DIFFICULT_CODE = 1;
     private final int HARD_DIFFICULT_CODE = 2;
-    private final int boardWidth;
+
 
     private final Board.State FIGURE_PLAYER = Board.State.X;
 
     public GameController() {
         board = new Board();
         view = new ConsoleView();
-        boardWidth = Board.getBoardWidth();
     }
 
     public static Board getBoard() {
@@ -28,7 +27,7 @@ public class GameController {
 
     public void play() {
 
-        int difficult = view.startGame();
+        int difficult = view.printChoiceDifficult();
 
         while (!board.isGameOver()) {
             view.printGameStatus();
@@ -41,48 +40,27 @@ public class GameController {
 
     private void playMove(int codeDifficult) {
         if (board.getTurn() == FIGURE_PLAYER) {
-            getCoordinates();
+            stepHuman();
         } else {
-            switch (codeDifficult){
-                case EASY_DIFFICULT_CODE:
-                    Simple.run(board);
-                    break;
-                case HARD_DIFFICULT_CODE:
-                    AlphaBetaAdvanced.run(board);
-                    break;
-                default:
-                    break;
-            }
-
+            stepAI(codeDifficult);
         }
     }
 
-    private void getCoordinates() {
-        int[] coordinates = view.getCoordinates();
-
-        String error = "";
-        if (!checkCoordinates(coordinates, boardWidth)) {
-
-            error = "\nInvalid move." +
-                    "\nThe index of the move must be between 0 and " +
-                    (Board.getBoardWidth()-1) +
-                    ", inclusive.";
-
-        } else if (!board.move(coordinates[0], coordinates[1])) {
-
-            error = "\nInvalid move." +
-                    "\nThe selected coordinates must be blank.";
+    private void stepAI(int codeDifficult) {
+        switch (codeDifficult) {
+            case EASY_DIFFICULT_CODE:
+                Simple.run(board);
+                break;
+            case HARD_DIFFICULT_CODE:
+                AlphaBetaAdvanced.run(board);
+                break;
+            default:
+                break;
         }
-
-        view.printError(error);
     }
 
-    private boolean checkCoordinates(int[] coordinates, int boardWidth) {
-
-        if (coordinates[0] >= 0 && coordinates[0] <= boardWidth-1) {
-            return coordinates[1] >= 0 && coordinates[1] <= boardWidth-1;
-        }
-
-        return false;
+    private void stepHuman() {
+        int[] coordinates =  view.getCoordinates();
+        board.move(coordinates[0], coordinates[1]);
     }
 }
